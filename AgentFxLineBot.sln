@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentFxLineBot", "AgentFxLineBot.csproj", "{939EF175-7440-5F10-3E06-7D8C48809136}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{939EF175-7440-5F10-3E06-7D8C48809136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939EF175-7440-5F10-3E06-7D8C48809136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{939EF175-7440-5F10-3E06-7D8C48809136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{939EF175-7440-5F10-3E06-7D8C48809136}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {459A955A-EEB0-4501-BF29-C06D057C77E8}
+	EndGlobalSection
+EndGlobal
