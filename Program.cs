@@ -12,6 +12,10 @@ using AngleSharp;
 var builder = WebApplication.CreateBuilder(args);
 
 const string modelName = "gpt-5.2-chat";
+SessionState.ModelName = modelName;
+SessionState.ModelInTokenRate = 54.84m / 1_000_000;
+SessionState.ModelOutTokenRate = 438.66m / 1_000_000;
+
 var chanAccToken = builder.Configuration["LineBotToken"] ?? throw new Exception("No LineBotToken setting");
 
 var azureChatClient = new AzureOpenAIClient(
@@ -82,7 +86,6 @@ app.MapPost("/MsgCallback", async (HttpContext context) =>
                 var mediaType = image.MimeType;
                 var data = new DataContent(image.Content, mediaType);
                 data.AdditionalProperties = new() { ["name"] = (object?)image.Id + "." + mediaType.Split('/').Last() };
-                Console.WriteLine($"Received image with media type: {mediaType}");
                 sessionState.Images.Add(data);
             }
             else if (evt.message.type == "text")
@@ -108,9 +111,17 @@ app.MapPost("/MsgCallback", async (HttpContext context) =>
                                 chatMsg = new MSChatMessage(ChatRole.User, new List<AIContent>() { new TextContent(text) }.Concat(sessionState.Images).ToList());
                                 sessionState.Images.Clear();
                             }
+                            var sw = System.Diagnostics.Stopwatch.StartNew();
                             var res = await agent.RunAsync(chatMsg, sessionState.Session);
+                            sw.Stop();
                             outMsg = res.Text;
+                            var inTokens = res.Usage?.InputTokenCount ?? 0;
+                            var outTokens = res.Usage?.OutputTokenCount ?? 0;
                             sessionState.LogOutput(outMsg);
+                            sessionState.AddTokens(inTokens, outTokens);
+                            outMsg += $"\n # 耗時 {sw.Elapsed.TotalSeconds:n1}s, IN {inTokens:n0} / OUT {outTokens:n0} Tokens, {sessionState.TokenUsage}";
+                            var resonTokens = res.Usage?.ReasoningTokenCount ?? 0;
+                            // outMsg += resonTokens > 0 ? $"\n # 推理：{resonTokens:n0} Tokens" : "";
                         }
                         catch (Exception ex)
                         {
